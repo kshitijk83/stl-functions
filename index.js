@@ -1,3 +1,10 @@
+export class Node {
+  constructor(value) {
+    this.value = value;
+    this.next = null;
+  }
+}
+
 export class Queue {
   constructor() {
     this._head = null;
@@ -69,16 +76,9 @@ export class Queue {
   }
 }
 
-export class Node {
-  constructor(value) {
-    this.value = value;
-    this.prev = null;
-  }
-}
-
-export default class Stack {
+export class Stack {
   constructor() {
-    this._top = null;
+    this.top = null;
     this._length = 0;
   }
 
@@ -88,9 +88,9 @@ export default class Stack {
    * @return {number} The new length of the stack.
    */
   push(item) {
-    const node = new Node(item);
-    node.prev = this._top;
-    this._top = node;
+    const newNode = new Node(item);
+    newNode.next = this.top;
+    this.top = newNode;
     this._length++;
     return this._length;
   }
@@ -100,13 +100,10 @@ export default class Stack {
    * @return {*} The item at the top of the stack if it is not empty, `undefined` otherwise.
    */
   pop() {
-    if (this.isEmpty()) {
-      return undefined;
-    }
-
-    const node = this._top;
-    this._top = node.prev;
-    node.prev = null;
+    if (this.isEmpty()) return undefined;
+    const node = this.top;
+    this.top = node.next;
+    node.next = null;
     this._length--;
     return node.value;
   }
@@ -124,7 +121,7 @@ export default class Stack {
    * @return {*} The item at the top of the stack if it is not empty, `undefined` otherwise.
    */
   peek() {
-    return this.isEmpty() ? undefined : this._top.value;
+    return this.isEmpty() ? undefined : this.top.value;
   }
 
   /**
