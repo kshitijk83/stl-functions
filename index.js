@@ -132,3 +132,94 @@ export class Stack {
     return this._length;
   }
 }
+
+export class maxHeap {
+  constructor() {
+    this._heapArr = [];
+  }
+  _PARENT(arrIdx) {
+    return Math.floor((arrIdx - 1) / 2);
+  }
+  _LEFT(parentIdx) {
+    return 2 * parentIdx + 1;
+  }
+  _RIGHT(parentIdx) {
+    return 2 * parentIdx + 2;
+  }
+
+  _heapifyTopDown(node) {
+    let left = this._LEFT(node);
+    let right = this._RIGHT(node);
+
+    let largestIdx = node;
+    if (left < this.size() && this._heapArr[left] > this._heapArr[largestIdx]) {
+      largestIdx = left;
+    }
+
+    if (
+      right < this.size() &&
+      this._heapArr[right] > this._heapArr[largestIdx]
+    ) {
+      largestIdx = right;
+    }
+
+    if (largestIdx != node) {
+      [this._heapArr[node], this._heapArr[largestIdx]] = [
+        this._heapArr[largestIdx],
+        this._heapArr[node],
+      ];
+      this._heapifyTopDown(largestIdx);
+    }
+  }
+
+  _heapifyBottomUp(node) {
+    let parentIdx = this._PARENT(node);
+    if (node > 0 && this._heapArr[parentIdx] < this._heapArr[node]) {
+      [this._heapArr[node], this._heapArr[parentIdx]] = [
+        this._heapArr[parentIdx],
+        this._heapArr[node],
+      ];
+      this._heapifyBottomUp(parentIdx);
+    }
+  }
+
+  size() {
+    return this._heapArr.length;
+  }
+  empty() {
+    return this.size() === 0;
+  }
+  push(node) {
+    this._heapArr.push(node);
+    this._heapifyBottomUp(this.size() - 1);
+  }
+  pop() {
+    if (this.size() === 0) {
+      throw Error('empty heap');
+    }
+    const lastIdx = this.size() - 1;
+    const arr = this._heapArr;
+    [arr[0], arr[lastIdx]] = [arr[lastIdx], arr[0]];
+    arr.pop();
+    this._heapifyTopDown(0);
+  }
+  top() {
+    if (this.size() === 0) {
+      throw Error('empty heap');
+    }
+    return this._heapArr[0];
+  }
+}
+
+(function main() {
+  const pq = new maxHeap();
+  const arr = [1, 4, 6, 3, 2, 1, 0, 2];
+  for (let val of arr) {
+    pq.push(val);
+  }
+  while (!pq.empty()) {
+    const top = pq.top();
+    pq.pop();
+    console.log(top);
+  }
+})();
